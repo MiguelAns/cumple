@@ -9,9 +9,16 @@
 </head>
 <body>
   <div class="container">
-    <h1>📅Calendario de Cumpleaños📆 </h1>
-    <div id="calendar"></div>
-    <button onclick="window.history.back()">Salir</button>
-  </div>
-</body>
-</html>
+    <!-- Canvas para los fuegos artificiales -->
+    <canvas id="fireworks"></canvas>
+    <div class="container">
+      <h1>📅 Birthday Calendar</h1>
+      <div class="navigation">
+        <button id="prev-month">Previous</button>
+        <span id="month-label"></span>
+        <button id="next-month">Next</button>
+      </div>
+      <div id="calendar"></div>
+      <button onclick="window.history.back()">Back</button>
+    </div>
+    
