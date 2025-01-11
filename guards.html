@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gestión de Guardias</title>
+  <link rel="stylesheet" href="styles.css">
+  <script defer src="guards.js"></script>
+</head>
+<body>
+  <!-- Barra de navegación -->
+  <nav id="sidebar" class="sidebar">
+    <button id="toggle-menu" class="menu-button">☰</button>
+    <ul>
+      <li><a href="index.html">🏠 Inicio</a></li>
+      <li><a href="calendar.html">🎉 Cumpleaños</a></li>
+      <li><a href="guards.html">🛡️ Guardias</a></li>
+      <li><a href="#">⚙️ Configuración</a></li>
+    </ul>
+  </nav>
+
+  <!-- Contenido Principal -->
+  <div class="container">
+    <h1>🛡️ Gestión de Guardias</h1>
+    <form id="guard-form">
+      <input type="text" id="guard-name" placeholder="Nombre del guardia" required />
+      <input type="date" id="guard-date" required />
+      <button type="submit">Agregar Guardia</button>
+    </form>
+
+    <h2>Guardias Asignados</h2>
+    <!-- Contenedor con desplazamiento -->
+    <div class="table-container">
+      <table id="guard-table">
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>Fecha</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Las filas se generarán dinámicamente -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+</body>
+</html>
+
