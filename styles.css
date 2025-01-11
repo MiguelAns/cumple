@@ -224,3 +224,125 @@ background-size: cover;
     grid-template-columns: repeat(2, 1fr);
   }
 }
+
+/* Barra de navegación lateral */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 200px; /* Ancho de la barra */
+  height: 100%; /* Ocupa toda la altura */
+  background-color: #333; /* Fondo oscuro */
+  color: white;
+  padding: 20px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  z-index: 1000; /* Encima de otros elementos */
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease-in-out; /* Animación para ocultar/mostrar */
+}
+
+.sidebar.hidden {
+  transform: translateX(-160px); /* Oculta la barra parcialmente */
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+}
+
+.sidebar li {
+  margin: 20px 0; /* Separación entre elementos */
+  text-align: center;
+}
+
+.sidebar a {
+  text-decoration: none;
+  color: white;
+  font-size: 16px;
+  padding: 10px 20px;
+  display: block;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+}
+
+.sidebar a:hover {
+  background-color: #575757; /* Efecto hover */
+}
+
+/* Botón para ocultar/mostrar el menú */
+.menu-button {
+  position: absolute;
+  top: 4px; /* Espaciado superior dentro de la barra */
+  right: -4px; /* Hace que el botón quede visible fuera de la barra */
+  z-index: 1000; /* Encima del resto */
+  background-color: #656769;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  padding: 8px 10px;
+  font-size: 15px;
+
+  cursor: pointer;
+  transition: background-color 0.3s, right 0.3s ease-in-out;
+}
+
+.menu-button:hover {
+  background-color: #0056b3;
+}
+
+/* Contenedor principal */
+.container {
+  padding: 20px;
+  margin-left: 15px; /* Espacio para la barra */
+  box-sizing: border-box;
+  transition: margin-left 0.3s ease-in-out; /* Animación al ocultar/mostrar la barra */
+}
+
+.sidebar.hidden + .container {
+  margin-left: 60px; /* Ajustar margen cuando la barra está oculta */
+}
+
+/* Responsive: Reduce el ancho de la barra en pantallas pequeñas */
+@media (max-width: 550px) {
+  .sidebar {
+    width: 100px;
+  }
+
+  .sidebar.hidden {
+    transform: translateX(-100px);
+  }
+
+  .sidebar.hidden + .container {
+    margin-left: 50px;
+  }
+
+  .menu-button {
+    right: -30px; /* Ajuste para pantallas pequeñas */
+  }
+}
+
+@media (max-width: 480px) {
+  .sidebar {
+    width: 120px;
+  }
+
+  .sidebar.hidden {
+    transform: translateX(-100px);
+  }
+
+  .sidebar.hidden + .container {
+    margin-left: 40px;
+  }
+
+  .menu-button {
+    right: -25px; /* Botón visible en pantallas pequeñas */
+  }
+
+  .sidebar a {
+    font-size: 14px; /* Texto más pequeño */
+  }
+}

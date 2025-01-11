@@ -8,6 +8,21 @@
   <script defer src="calendar.js"></script>
 </head>
 <body>
+<!-- Barra de navegación -->
+<nav id="sidebar" class="sidebar">
+  <!-- Botón para ocultar/mostrar el menú -->
+  <button id="toggle-menu" class="menu-button">☰</button>
+
+  <ul>
+    
+    <li><a href="index.html">🏠 Inicio</a></li>
+    <li><a href="#">📅 Calendario</a></li>
+    <li><a href="#">🎉 Cumpleaños</a></li>
+    <li><a href="#">⚙️ Configuración</a></li>
+  </ul>
+</nav>
+
+
   <div class="container">
     <!-- Canvas para los fuegos artificiales -->
     <canvas id="fireworks"></canvas>
@@ -21,4 +36,5 @@
       <div id="calendar"></div>
       <button onclick="window.history.back()">Back</button>
     </div>
-    
+  </body>
+</html>
