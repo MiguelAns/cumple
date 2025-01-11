@@ -1,25 +1,25 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const guardForm = document.getElementById('guard-form');
-    const guardNameInput = document.getElementById('guard-name');
-    const guardDateInput = document.getElementById('guard-date');
-    const guardTableBody = document.querySelector('#guard-table tbody');
+    const uniformForm = document.getElementById('uniform-form');
+    const uniformNameInput = document.getElementById('uniform-name');
+    const uniformDateInput = document.getElementById('uniform-date');
+    const uniformTableBody = document.querySelector('#uniform-table tbody');
   
-    // Obtener guardias de localStorage o inicializar un array vacío
-    let guards = JSON.parse(localStorage.getItem('guards')) || [];
+    // Obtener uniformes de localStorage o inicializar un array vacío
+    let uniforms = JSON.parse(localStorage.getItem('uniforms')) || [];
   
     // Guardar en localStorage
     function saveToLocalStorage() {
-      localStorage.setItem('guards', JSON.stringify(guards));
+      localStorage.setItem('uniforms', JSON.stringify(uniforms));
     }
   
     // Renderizar la tabla
     function renderTable() {
-      guardTableBody.innerHTML = ''; // Limpia la tabla
-      guards.forEach((guard, index) => {
+      uniformTableBody.innerHTML = ''; // Limpia la tabla
+      uniforms.forEach((uniform, index) => {
         const row = document.createElement('tr');
         row.innerHTML = `
-          <td>${guard.name}</td>
-          <td>${new Date(guard.date).toLocaleDateString('es-ES', {
+          <td>${uniform.name}</td>
+          <td>${new Date(uniform.date).toLocaleDateString('es-ES', {
             weekday: 'long',
             day: 'numeric',
             month: 'long',
@@ -27,34 +27,34 @@ document.addEventListener('DOMContentLoaded', () => {
           })}</td>
           <td><button class="delete-button" data-index="${index}">❌ Eliminar</button></td>
         `;
-        guardTableBody.appendChild(row);
+        uniformTableBody.appendChild(row);
       });
     }
   
     // Manejar el envío del formulario
-    guardForm.addEventListener('submit', (e) => {
+    uniformForm.addEventListener('submit', (e) => {
       e.preventDefault();
   
-      const name = guardNameInput.value.trim();
-      const date = guardDateInput.value;
+      const name = uniformNameInput.value.trim();
+      const date = uniformDateInput.value;
   
       if (name && date) {
-        // Agregar un nuevo guardia
-        guards.push({ name, date });
+        // Agregar un nuevo uniforme
+        uniforms.push({ name, date });
         saveToLocalStorage();
         renderTable();
   
         // Limpiar el formulario
-        guardNameInput.value = '';
-        guardDateInput.value = '';
+        uniformNameInput.value = '';
+        uniformDateInput.value = '';
       }
     });
   
-    // Manejar la eliminación de guardias
-    guardTableBody.addEventListener('click', (e) => {
+    // Manejar la eliminación de uniformes
+    uniformTableBody.addEventListener('click', (e) => {
       if (e.target.classList.contains('delete-button')) {
         const index = e.target.getAttribute('data-index');
-        guards.splice(index, 1); // Eliminar el guardia del array
+        uniforms.splice(index, 1); // Eliminar el uniforme del array
         saveToLocalStorage();
         renderTable(); // Renderizar de nuevo la tabla
       }

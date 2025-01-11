@@ -423,3 +423,58 @@ button:hover {
   background-color: #d32f2f;
 }
 
+/*fddddddddddddddddddddddddddddd*/
+
+/* Contenedor de la tabla con desplazamiento */
+.table-container {
+  max-height: 300px; /* Altura máxima fija */
+  overflow-y: auto; /* Agrega barra de desplazamiento vertical */
+  border: 1px solid #ccc; /* Borde alrededor del contenedor */
+  border-radius: 5px; /* Bordes redondeados */
+  margin-top: 20px; /* Espaciado superior */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra para un mejor diseño */
+}
+
+/* Tabla */
+#uniform-table {
+  width: 100%; /* Tabla ocupa todo el ancho del contenedor */
+  border-collapse: collapse; /* Quita el espacio entre bordes */
+  font-size: 16px; /* Fuente legible */
+}
+
+#uniform-table thead {
+  background-color: #007BFF; /* Fondo azul para la cabecera */
+  color: white; /* Texto blanco */
+  position: sticky; /* Cabecera fija al desplazarse */
+  top: 0; /* Fija en la parte superior */
+  z-index: 1; /* Asegura que esté encima de las filas */
+}
+
+#uniform-table th, #uniform-table td {
+  padding: 10px; /* Espaciado interno */
+  text-align: left; /* Alineación del texto */
+  border-bottom: 1px solid #ddd; /* Línea divisoria */
+}
+
+#uniform-table tbody tr:hover {
+  background-color: #f9f9f9; /* Efecto hover */
+}
+
+#uniform-table tbody tr:nth-child(even) {
+  background-color: #f2f2f2; /* Color alternativo para filas pares */
+}
+
+/* Botón de eliminación */
+#uniform-table td button {
+  background-color: #f44336; /* Botón rojo */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 5px 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+#uniform-table td button:hover {
+  background-color: #d32f2f; /* Rojo más oscuro al pasar el cursor */
+}

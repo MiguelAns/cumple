@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gestión de Guardias</title>
+  <title>Gestión de Uniformes</title>
   <link rel="stylesheet" href="styles.css">
-  <script defer src="guards.js"></script>
+  <script defer src="uniforms.js"></script>
 </head>
 <body>
   <!-- Barra de navegación -->
@@ -13,29 +13,29 @@
     <button id="toggle-menu" class="menu-button">☰</button>
     <ul>
       <li><a href="index.html">🏠 Inicio</a></li>
-      <li><a href="calendar.html">🎉 Cumpleaños</a></li>
+      <li><a href="calendar.html">🎉Cumpleaños</a></li>
+      <li><a href="guards.html">🛡️ Guardias</a></li>
       
-     
-      <li><a href="uniforms.html">👔 Uniformes</a></li>
+      
     </ul>
   </nav>
 
   <!-- Contenido Principal -->
   <div class="container">
-    <h1>🛡️ Gestión de Guardias</h1>
-    <form id="guard-form">
-      <input type="text" id="guard-name" placeholder="Nombre del guardia" required />
-      <input type="date" id="guard-date" required />
-      <button type="submit">Agregar Guardia</button>
+    <h1>👔 Gestión de Uniformes</h1>
+    <form id="uniform-form">
+      <input type="text" id="uniform-name" placeholder="Tipo de uniforme" required />
+      <input type="date" id="uniform-date" required />
+      <button type="submit">Agregar Uniforme</button>
     </form>
 
-    <h2>Guardias Asignados</h2>
+    <h2>Días Asignados para Uniformes</h2>
     <!-- Contenedor con desplazamiento -->
     <div class="table-container">
-      <table id="guard-table">
+      <table id="uniform-table">
         <thead>
           <tr>
-            <th>Nombre</th>
+            <th>Uniforme</th>
             <th>Fecha</th>
             <th>Acciones</th>
           </tr>
@@ -48,4 +48,3 @@
   </div>
 </body>
 </html>
-
