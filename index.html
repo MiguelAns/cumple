@@ -19,3 +19,13 @@
   </div>
 </body>
 </html>
+<script>
+  // Verificar autenticación al cargar la página
+  document.addEventListener('DOMContentLoaded', () => {
+    const isAuthenticated = localStorage.getItem('isAuthenticated');
+    if (isAuthenticated !== 'true') {
+      // Redirigir al inicio de sesión si no está autenticado
+      window.location.href = 'login.html';
+    }
+  });
+</script>

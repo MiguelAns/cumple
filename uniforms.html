@@ -1,4 +1,15 @@
 <!DOCTYPE html>
+<script>
+  // Verificar autenticación al cargar la página
+  document.addEventListener('DOMContentLoaded', () => {
+    const isAuthenticated = localStorage.getItem('isAuthenticated');
+    if (isAuthenticated !== 'true') {
+      // Redirigir al inicio de sesión si no está autenticado
+      window.location.href = 'login.html';
+    }
+  });
+</script>
+
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -15,6 +26,8 @@
       <li><a href="index.html">🏠 Inicio</a></li>
       <li><a href="calendar.html">🎉Cumpleaños</a></li>
       <li><a href="guards.html">🛡️ Guardias</a></li>
+      <li><a href="login.html" id="logout-button">🔓 Cerrar Sesión</a></li>
+
       
       
     </ul>

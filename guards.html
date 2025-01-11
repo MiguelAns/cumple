@@ -14,9 +14,9 @@
     <ul>
       <li><a href="index.html">🏠 Inicio</a></li>
       <li><a href="calendar.html">🎉 Cumpleaños</a></li>
-      
-     
       <li><a href="uniforms.html">👔 Uniformes</a></li>
+      <li><a href="login.html" id="logout-button">🔓 Cerrar Sesión</a></li>
+
     </ul>
   </nav>
 
@@ -49,3 +49,13 @@
 </body>
 </html>
 
+<script>
+  // Verificar autenticación al cargar la página
+  document.addEventListener('DOMContentLoaded', () => {
+    const isAuthenticated = localStorage.getItem('isAuthenticated');
+    if (isAuthenticated !== 'true') {
+      // Redirigir al inicio de sesión si no está autenticado
+      window.location.href = 'login.html';
+    }
+  });
+</script>
