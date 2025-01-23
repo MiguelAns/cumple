@@ -3,49 +3,100 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>calendario</title>
+  <title>Calendario con Guardias</title>
   <link rel="stylesheet" href="styles.css">
   <script defer src="calendar.js"></script>
+  <script defer src="login.js"></script>
 </head>
-<body>
+<body class="fondo">
 <!-- Barra de navegación -->
 <nav id="sidebar" class="sidebar">
-  <!-- Botón para ocultar/mostrar el menú -->
   <button id="toggle-menu" class="menu-button">☰</button>
-
   <ul>
-    
     <li><a href="index.html">🏠 Inicio</a></li>
-       <li><a href="guards.html">🛡️ GUARDIAS</a></li>
-       <li><a href="uniforms.html">👔 Uniformes</a></li>
-       <li><a href="login.html" id="logout-button">🔓 Cerrar Sesión</a></li>
-
+    <li><a href="guards.html">🛡️ Guardias</a></li>
+    <li><a href="uniforms.html">👔 Uniformes</a></li>
+    <li><a href="login.html" id="logout-button">Cerrar Sesión</a></li>
   </ul>
 </nav>
 
+<div class="container">
+  <!-- Canvas para los fuegos artificiales -->
+  <canvas id="fireworks"></canvas>
 
-  <div class="container">
-    <!-- Canvas para los fuegos artificiales -->
-    <canvas id="fireworks"></canvas>
-    <div class="container">
-      <h1>📅 Birthday Calendar</h1>
-      <div class="navigation">
-        <button id="prev-month">Previous</button>
-        <span id="month-label"></span>
-        <button id="next-month">Next</button>
-      </div>
-      <div id="calendar"></div>
-      <button onclick="window.history.back()">Back</button>
+  <div class="calendar-container">
+    <h1>📅 Calendario</h1>
+    <div class="navigation">
+      <button id="prev-month">Previous</button>
+      <span id="month-label"></span>
+      <button id="next-month">Next</button>
     </div>
-  </body>
-</html>
+    <div id="calendar"></div>
+    <button onclick="window.history.back()">Back</button>
+  </div>
+</div>
+
 <script>
-  // Verificar autenticación al cargar la página
-  document.addEventListener('DOMContentLoaded', () => {
-    const isAuthenticated = localStorage.getItem('isAuthenticated');
-    if (isAuthenticated !== 'true') {
-      // Redirigir al inicio de sesión si no está autenticado
+  document.addEventListener('DOMContentLoaded', async () => {
+    // Verificar sesión
+    try {
+      const response = await fetch('http://localhost:3000/session', {
+        method: 'GET',
+        credentials: 'include',
+      });
+
+      if (!response.ok) {
+        window.location.href = 'login.html'; // Redirige si no está autenticado
+        return;
+      }
+
+      const userData = await response.json();
+
+      if (userData.role === 'admin') {
+        console.log('Acceso como administrador');
+      } else if (userData.role === 'user') {
+        console.log('Acceso como usuario');
+      } else {
+        alert('Acceso denegado');
+        window.location.href = 'login.html';
+      }
+    } catch (error) {
+      console.error('Error al verificar la sesión:', error);
       window.location.href = 'login.html';
+    }
+
+    // Manejo de la barra lateral
+    const sidebar = document.getElementById('sidebar');
+    const toggleMenuButton = document.getElementById('toggle-menu');
+
+    // Verificar que el botón y la barra existan
+    if (toggleMenuButton && sidebar) {
+      toggleMenuButton.addEventListener('click', () => {
+        sidebar.classList.toggle('hidden'); // Mostrar/Ocultar la barra lateral
+      });
+    } else {
+      console.error('No se encontraron los elementos #sidebar o #toggle-menu');
+    }
+
+    // Cerrar sesión
+    const logoutButton = document.getElementById('logout-button');
+    if (logoutButton) {
+      logoutButton.addEventListener('click', async () => {
+        try {
+          const response = await fetch('http://localhost:3000/logout', {
+            method: 'POST',
+            credentials: 'include',
+          });
+
+          if (response.ok) {
+            window.location.href = 'login.html';
+          }
+        } catch (error) {
+          console.error('Error al cerrar sesión:', error);
+        }
+      });
     }
   });
 </script>
+</body>
+</html>

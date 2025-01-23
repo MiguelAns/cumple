@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="styles.css">
   <script defer src="guards.js"></script>
 </head>
-<body>
+<body class="fondo">
   <!-- Barra de navegación -->
   <nav id="sidebar" class="sidebar">
     <button id="toggle-menu" class="menu-button">☰</button>
@@ -15,7 +15,8 @@
       <li><a href="index.html">🏠 Inicio</a></li>
       <li><a href="calendar.html">🎉 Cumpleaños</a></li>
       <li><a href="uniforms.html">👔 Uniformes</a></li>
-      <li><a href="login.html" id="logout-button">🔓 Cerrar Sesión</a></li>
+      <li><a href="login.html" id="logout-button">Cerrar Sesión</a></li>
+
 
     </ul>
   </nav>
@@ -46,16 +47,36 @@
       </table>
     </div>
   </div>
+   
+
+ 
+<script>
+  document.addEventListener('DOMContentLoaded', async () => {
+ try {
+   const response = await fetch('http://localhost:3000/session', {
+     method: 'GET',
+     credentials: 'include',
+   });
+
+   if (!response.ok) {
+     window.location.href = 'login.html'; // Redirige si no está autenticado
+     return;
+   }
+
+   const userData = await response.json();
+   if (userData.role !== 'admin') {
+     alert('Acceso denegado. Solo administradores pueden ingresar.');
+     window.location.href = 'login.html';
+   }
+ } catch (error) {
+   console.error('Error al verificar la sesión:', error);
+   window.location.href = 'login.html'; // Redirige si hay un error
+ }
+});
+
+</script>
+
+
 </body>
 </html>
 
-<script>
-  // Verificar autenticación al cargar la página
-  document.addEventListener('DOMContentLoaded', () => {
-    const isAuthenticated = localStorage.getItem('isAuthenticated');
-    if (isAuthenticated !== 'true') {
-      // Redirigir al inicio de sesión si no está autenticado
-      window.location.href = 'login.html';
-    }
-  });
-</script>

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Usuario</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="fondos">
+  <div class="container1">
+    <h2>Bienvenido, Usuario</h2>
+    <div id="user-content">Puedes visualizar el contenido pero no realizar modificaciones.</div>
+
+    <!-- Botón para redirigir al calendario -->
+    <button id="calendar-button">Ir al Calendario</button>
+    
+    <!-- Botón para cerrar sesión -->
+    <button id="logout-button">Cerrar Sesión</button>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      try {
+        const response = await fetch('http://localhost:3000/session', {
+          method: 'GET',
+          credentials: 'include',
+        });
+
+        if (!response.ok) {
+          window.location.href = 'login.html';
+          return;
+        }
+
+        const userData = await response.json();
+        if (userData.role !== 'user') {
+          alert('Acceso denegado. Solo usuarios regulares pueden ingresar.');
+          window.location.href = 'login.html';
+        }
+      } catch (error) {
+        console.error('Error al verificar la sesión:', error);
+        window.location.href = 'login.html';
+      }
+
+      // Redirigir al calendario
+      document.getElementById('calendar-button').addEventListener('click', () => {
+        window.location.href = 'calendar.html'; // Redirige al calendario
+      });
+
+      // Cerrar sesión
+      document.getElementById('logout-button').addEventListener('click', async () => {
+        try {
+          const response = await fetch('http://localhost:3000/logout', {
+            method: 'POST',
+            credentials: 'include',
+          });
+
+          if (response.ok) {
+            window.location.href = 'login.html';
+          }
+        } catch (error) {
+          console.error('Error al cerrar sesión:', error);
+        }
+      });
+    });
+  </script>
+</body>
+</html>

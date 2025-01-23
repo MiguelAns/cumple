@@ -64,6 +64,50 @@ document.addEventListener('DOMContentLoaded', () => {
     renderTable();
   });
   
+  document.addEventListener('DOMContentLoaded', async () => {
+    try {
+      // Verificar si la sesión sigue activa
+      const response = await fetch('http://localhost:3000/session', {
+        method: 'GET',
+        credentials: 'include', // Envía las cookies
+      });
+  
+      if (!response.ok) {
+        console.warn('Sesión no válida, redirigiendo al inicio de sesión...');
+        window.location.href = 'login.html';
+        return;
+      }
+  
+      const userData = await response.json();
+      console.log('Sesión válida:', userData);
+  
+      // Mostrar mensaje de bienvenida si el usuario está autenticado
+      const welcomeMessage = document.getElementById('welcome-message');
+      if (welcomeMessage) {
+        welcomeMessage.textContent = `Bienvenido, ${userData.username}`;
+      }
+    } catch (error) {
+      console.error('Error al verificar la sesión:', error);
+      window.location.href = 'login.html'; // Redirigir en caso de error
+    }
+  
+    // Configurar el botón de cerrar sesión
+    document.getElementById('logout-button').addEventListener('click', async () => {
+      try {
+        const response = await fetch('http://localhost:3000/logout', {
+          method: 'POST',
+          credentials: 'include', // Envía las cookies
+        });
+  
+        if (response.ok) {
+          console.log('Sesión cerrada, redirigiendo...');
+          window.location.href = 'login.html';
+        }
+      } catch (error) {
+        console.error('Error al cerrar sesión:', error);
+      }
+    });
+  });
   document.addEventListener('DOMContentLoaded', () => {
     const sidebar = document.getElementById('sidebar');
     const toggleMenuButton = document.getElementById('toggle-menu');
@@ -73,5 +117,9 @@ document.addEventListener('DOMContentLoaded', () => {
       sidebar.classList.toggle('hidden');
     });
   });
+
   
- 
+  
+  
+  
+  

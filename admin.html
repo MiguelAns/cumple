@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Administrador</title>
+</head>
+<body>
+  <h1>Bienvenido, Administrador</h1>
+  <div id="admin-content">Aquí puedes realizar modificaciones.</div>
+  <button id="logout-button">Cerrar Sesión</button>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      try {
+        const response = await fetch('http://localhost:3000/session', {
+          method: 'GET',
+          credentials: 'include',
+        });
+
+        if (!response.ok) {
+          // Redirige al inicio de sesión si no está autenticado
+          window.location.href = 'login.html';
+          return;
+        }
+
+        const userData = await response.json();
+        if (userData.role !== 'admin') {
+          alert('Acceso denegado. Solo administradores pueden ingresar.');
+          window.location.href = 'login.html';
+        }
+      } catch (error) {
+        console.error('Error al verificar la sesión:', error);
+        window.location.href = 'login.html'; // Redirige si hay un error
+      }
+
+      // Cerrar sesión
+      document.getElementById('logout-button').addEventListener('click', async () => {
+        try {
+          const response = await fetch('http://localhost:3000/logout', {
+            method: 'POST',
+            credentials: 'include',
+          });
+
+          if (response.ok) {
+            window.location.href = 'login.html';
+          }
+        } catch (error) {
+          console.error('Error al cerrar sesión:', error);
+        }
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,217 +1,183 @@
-document.addEventListener('DOMContentLoaded', () => {
-  const calendarContainer = document.getElementById('calendar');
-  const prevButton = document.getElementById('prev-month');
-  const nextButton = document.getElementById('next-month');
-  const monthLabel = document.getElementById('month-label');
-  // Inicializa el canvas y su contexto
-const canvas = document.getElementById('fireworks');
-const ctx = canvas.getContext('2d');
+document.addEventListener("DOMContentLoaded", () => {
+  const calendarElement = document.getElementById("calendar");
+  const monthLabel = document.getElementById("month-label");
+  const prevMonthBtn = document.getElementById("prev-month");
+  const nextMonthBtn = document.getElementById("next-month");
 
-  const weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-  const months = [
-    'January', 'February', 'March', 'April', 'May', 'June',
-    'July', 'August', 'September', 'October', 'November', 'December'
-  ];
+  let currentDate = new Date();
 
-  let currentMonth = new Date().getMonth();
-  let currentYear = new Date().getFullYear();
-  let birthdays = JSON.parse(localStorage.getItem('birthdays')) || [];
-
-  // Ajustar el tamaño del canvas
-  function resizeCanvas() {
-    canvas.width = calendarContainer.offsetWidth;
-    canvas.height = calendarContainer.offsetHeight;
+  // Ajustar fechas al timezone local
+  function formatDateLocal(date) {
+    const offset = date.getTimezoneOffset();
+    const localDate = new Date(date.getTime() - offset * 60000);
+    return localDate.toISOString().split("T")[0];
   }
-  window.addEventListener('resize', resizeCanvas);
-  resizeCanvas();
 
-  // Mostrar notificación tipo toast
-  function showToast(message) {
-    const toast = document.createElement('div');
-    toast.className = 'toast';
-    toast.innerText = message;
+  // Cargar guardias desde localStorage
+  function loadGuards() {
+    const guardiasJSON = localStorage.getItem("guards");
+    return guardiasJSON ? JSON.parse(guardiasJSON) : [];
+  }
 
-    toast.style.position = 'fixed';
-    toast.style.bottom = '20px';
-    toast.style.right = '20px';
-    toast.style.backgroundColor = '#4CAF50';
-    toast.style.color = '#fff';
-    toast.style.padding = '10px 20px';
-    toast.style.borderRadius = '5px';
-    toast.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)';
-    toast.style.zIndex = '1000';
-    toast.style.animation = 'fade-in-out 3s ease';
+  // Cargar cumpleaños desde localStorage
+  function loadBirthdays() {
+    const birthdaysJSON = localStorage.getItem("birthdays");
+    return birthdaysJSON ? JSON.parse(birthdaysJSON) : [];
+  }
 
-    document.body.appendChild(toast);
+  // Guardar nueva guardia
+  function saveGuard(date, name, details) {
+    const guardiasJSON = localStorage.getItem("guards");
+    const guardias = guardiasJSON ? JSON.parse(guardiasJSON) : [];
+
+    const formattedDate = formatDateLocal(new Date(date)); // Ajuste de fecha
+    guardias.push({ date: formattedDate, name, details });
+    localStorage.setItem("guards", JSON.stringify(guardias));
+  }
+
+  // Mostrar fuegos artificiales
+  function launchFireworks() {
+    const body = document.body;
+    const fireworks = document.createElement("div");
+    fireworks.className = "fireworks";
+    body.appendChild(fireworks);
 
     setTimeout(() => {
-      toast.remove();
-    }, 3000);
-  }
-// Ajusta el tamaño del canvas al tamaño de la ventana
-function resizeCanvas() {
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
-}
-resizeCanvas();
-window.addEventListener('resize', resizeCanvas);
-  // Generar fuegos artificiales
-function showFireworks() {
-  const colors = ['#FF5733', '#33FF57', '#3357FF', '#FF33A6', '#A633FF'];
-  const particles = [];
-
-  // Genera partículas para los fuegos artificiales
-  for (let i = 0; i < 100; i++) {
-    particles.push({
-      x: canvas.width / 2, // Centro de la pantalla
-      y: canvas.height / 2,
-      angle: Math.random() * 2 * Math.PI, // Ángulo aleatorio
-      speed: Math.random() * 4 + 2, // Velocidad aleatoria
-      radius: Math.random() * 3 + 2, // Tamaño aleatorio
-      color: colors[Math.floor(Math.random() * colors.length)], // Color aleatorio
-      life: Math.random() * 100 + 50, // Tiempo de vida aleatorio
-    });
+      fireworks.remove();
+    }, 3000); // Duración de 3 segundos
   }
 
-    // Dibuja las partículas
-  function drawFireworks() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+  // Renderizar el calendario
+  function renderCalendar() {
+    calendarElement.innerHTML = ""; // Limpia el calendario
+    const guards = loadGuards();
+    const birthdays = loadBirthdays();
 
-    particles.forEach((particle, index) => {
-      const dx = Math.cos(particle.angle) * particle.speed;
-      const dy = Math.sin(particle.angle) * particle.speed;
+    const month = currentDate.getMonth();
+    const year = currentDate.getFullYear();
 
-      particle.x += dx;
-      particle.y += dy;
-      particle.life -= 1;
+    const firstDay = new Date(year, month, 1);
+    const lastDay = new Date(year, month + 1, 0);
 
-      ctx.beginPath();
-      ctx.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2);
-      ctx.fillStyle = particle.color;
-      ctx.fill();
+    // Título del mes y año
+    monthLabel.textContent = firstDay.toLocaleString("default", { month: "long", year: "numeric" });
 
-        // Elimina partículas cuya vida se haya agotado
-      if (particle.life <= 0) {
-        particles.splice(index, 1);
-      }
-    });
-
-    // Si aún quedan partículas, continúa animando
-    if (particles.length > 0) {
-      requestAnimationFrame(drawFireworks);
+    // Crear espacio para los días vacíos antes del primer día del mes
+    const emptyDays = firstDay.getDay();
+    for (let i = 0; i < emptyDays; i++) {
+      const emptyCell = document.createElement("div");
+      emptyCell.className = "day empty";
+      calendarElement.appendChild(emptyCell);
     }
-  }
 
-  drawFireworks();
-}
+    // Generar los días del calendario
+    for (let day = 1; day <= lastDay.getDate(); day++) {
+      const date = new Date(year, month, day);
+      const formattedDate = formatDateLocal(date);
 
-  // Verificar cumpleaños del día
-  function checkTodayBirthdays() {
-    const today = new Date().toISOString().slice(0, 10);
-    let found = false;
+      const dayElement = document.createElement("div");
+      dayElement.className = "day";
+      dayElement.textContent = day;
 
-    birthdays.forEach((birthday) => {
-      if (birthday.date === today) {
-        showToast(`🎉 Hoy es el cumpleaños de ${birthday.name} 🎂`);
-        if (!found) {
-          showFireworks();
+      // Buscar si hay guardias en esta fecha
+      const guard = guards.find((g) => g.date === formattedDate);
+      if (guard) {
+        const guardInfo = document.createElement("span");
+        guardInfo.className = "guard-info";
+        guardInfo.textContent = `👮: ${guard.name}`;
+        dayElement.appendChild(guardInfo);
+      }
+
+      // Buscar si hay cumpleaños en esta fecha
+      const birthday = birthdays.find((b) => b.date === formattedDate);
+      if (birthday) {
+        const birthdayInfo = document.createElement("span");
+        birthdayInfo.className = "birthday-info";
+        birthdayInfo.textContent = `🎂: ${birthday.name}`;
+        dayElement.appendChild(birthdayInfo);
+
+        // Lanzar fuegos artificiales si es el día actual
+        if (formattedDate === formatDateLocal(new Date())) {
+          launchFireworks();
         }
-        found = true;
       }
-    });
 
-    if (!found) {
-      console.log('No hay cumpleaños hoy.');
+      calendarElement.appendChild(dayElement);
     }
   }
 
-  // Generar un mes completo
-  function generateMonth(monthIndex, year) {
-    calendarContainer.innerHTML = '';
-    monthLabel.innerText = `${months[monthIndex]} ${year}`;
-
-    const weekdaysRow = document.createElement('div');
-    weekdaysRow.className = 'weekdays';
-    weekdays.forEach((day) => {
-      const dayDiv = document.createElement('div');
-      dayDiv.className = 'weekday';
-      dayDiv.innerText = day;
-      weekdaysRow.appendChild(dayDiv);
-    });
-    calendarContainer.appendChild(weekdaysRow);
-
-    const daysRow = document.createElement('div');
-    daysRow.className = 'days';
-    const firstDay = new Date(year, monthIndex, 1).getDay();
-    const daysInMonth = new Date(year, monthIndex + 1, 0).getDate();
-
-    for (let i = 0; i < firstDay; i++) {
-      const emptyDay = document.createElement('div');
-      emptyDay.className = 'day empty';
-      daysRow.appendChild(emptyDay);
-    }
-
-    for (let day = 1; day <= daysInMonth; day++) {
-      const date = new Date(year, monthIndex, day).toISOString().slice(0, 10);
-      const dayDiv = document.createElement('div');
-      dayDiv.className = 'day';
-      dayDiv.innerHTML = `<span class="date">${day}</span>`;
-
-      const birthdaysOnThisDay = birthdays.filter((birthday) => birthday.date === date);
-      if (birthdaysOnThisDay.length > 0) {
-        const birthdayList = document.createElement('ul');
-        birthdayList.className = 'birthday-list';
-
-        birthdaysOnThisDay.forEach((birthday, index) => {
-          const birthdayItem = document.createElement('li');
-          birthdayItem.innerText = birthday.name;
-
-          const deleteButton = document.createElement('button');
-          deleteButton.innerText = '❌';
-          deleteButton.onclick = () => {
-            birthdays = birthdays.filter((b, i) => !(b.date === date && i === index));
-            localStorage.setItem('birthdays', JSON.stringify(birthdays));
-            generateMonth(currentMonth, currentYear);
-            showToast(`🗑️ Cumpleaños de ${birthday.name} eliminado.`);
-          };
-
-          birthdayItem.appendChild(deleteButton);
-          birthdayList.appendChild(birthdayItem);
-        });
-
-        dayDiv.appendChild(birthdayList);
-      }
-
-      daysRow.appendChild(dayDiv);
-    }
-
-    calendarContainer.appendChild(daysRow);
-  }
-
-  prevButton.addEventListener('click', () => {
-    if (currentMonth === 0) {
-      currentMonth = 11;
-      currentYear--;
-    } else {
-      currentMonth--;
-    }
-    generateMonth(currentMonth, currentYear);
-  });
-  
-  
-  nextButton.addEventListener('click', () => {
-    if (currentMonth === 11) {
-      currentMonth = 0;
-      currentYear++;
-    } else {
-      currentMonth++;
-    }
-    generateMonth(currentMonth, currentYear);
+  // Navegación por meses
+  prevMonthBtn.addEventListener("click", () => {
+    currentDate.setMonth(currentDate.getMonth() - 1);
+    renderCalendar();
   });
 
-  generateMonth(currentMonth, currentYear);
-  checkTodayBirthdays();
+  nextMonthBtn.addEventListener("click", () => {
+    currentDate.setMonth(currentDate.getMonth() + 1);
+    renderCalendar();
+  });
+
+  // Inicializar el calendario
+  renderCalendar();
 });
+
+document.addEventListener('DOMContentLoaded', () => {
+  const sidebar = document.getElementById('sidebar');
+  const toggleMenuButton = document.getElementById('toggle-menu');
+
+  // Alternar la clase "hidden" para mostrar/ocultar la barra
+  toggleMenuButton.addEventListener('click', () => {
+    sidebar.classList.toggle('hidden');
+  });
+});
+
+
+document.addEventListener('DOMContentLoaded', async () => {
+  let userRole = null;
+
+  // Verificar sesión
+  try {
+    const response = await fetch('http://localhost:3000/session', {
+      method: 'GET',
+      credentials: 'include',
+    });
+
+    if (response.ok) {
+      const userData = await response.json();
+      userRole = userData.role; // Obtener el rol del usuario
+    } else {
+      window.location.href = 'login.html'; // Redirige si no está autenticado
+    }
+  } catch (error) {
+    console.error('Error al verificar la sesión:', error);
+    window.location.href = 'login.html';
+  }
+
+  // Renderizar el calendario
+  renderCalendar();
+
+  // Permitir agregar/modificar eventos solo si es administrador
+  if (userRole === 'admin') {
+    enableEventModification();
+  } else {
+    console.log('Modo visualización: Solo lectura');
+  }
+});
+
+// Función para renderizar el calendario (solo lectura para usuarios)
+function renderCalendar() {
+  const calendarElement = document.getElementById('calendar');
+  const guards = JSON.parse(localStorage.getItem('guards')) || [];
+  const birthdays = JSON.parse(localStorage.getItem('birthdays')) || [];
+
+  // Lógica para mostrar el calendario (igual a tu implementación actual)
+}
+
+// Habilitar acciones de modificación (solo para administradores)
+function enableEventModification() {
+  console.log('Habilitando acciones de modificación');
+  // Aquí agrega lógica para permitir modificar datos si es administrador
+}
 document.addEventListener('DOMContentLoaded', () => {
   const sidebar = document.getElementById('sidebar');
   const toggleMenuButton = document.getElementById('toggle-menu');

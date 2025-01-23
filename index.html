@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="styles.css">
   <script defer src="app.js"></script>
 </head>
-<body>
+<body class="fondo">
   <div class="container">
     <h1>🎉 Recordatorio Cumpleaños 🎂</h1>
     <form id="birthday-form">
@@ -17,15 +17,40 @@
     </form>
     <button id="view-calendar">Ver calendario</button>
   </div>
-</body>
-</html>
+ 
 <script>
-  // Verificar autenticación al cargar la página
-  document.addEventListener('DOMContentLoaded', () => {
-    const isAuthenticated = localStorage.getItem('isAuthenticated');
-    if (isAuthenticated !== 'true') {
-      // Redirigir al inicio de sesión si no está autenticado
+   document.addEventListener('DOMContentLoaded', async () => {
+  try {
+    const response = await fetch('http://localhost:3000/session', {
+      method: 'GET',
+      credentials: 'include',
+    });
+
+    if (!response.ok) {
+      window.location.href = 'login.html'; // Redirige si no está autenticado
+      return;
+    }
+
+    const userData = await response.json();
+    if (userData.role !== 'admin') {
+      alert('Acceso denegado. Solo administradores pueden ingresar.');
       window.location.href = 'login.html';
     }
-  });
-</script>
+  } catch (error) {
+    console.error('Error al verificar la sesión:', error);
+    window.location.href = 'login.html'; // Redirige si hay un error
+  }
+});
+
+  </script>
+
+
+
+
+
+
+</body>
+</html>
+
+
+ 
